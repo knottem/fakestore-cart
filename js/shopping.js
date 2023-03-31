@@ -30,6 +30,17 @@ function addToCart(id) {
   document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
 }
 
+//delete all items from cart, empties dropdown and local storage
+if(document.getElementById('btnDeleteAll') != null) {
+  document.getElementById('btnDeleteAll').addEventListener('click', () => {
+    shop = [];
+    localStorage.setItem('shop', JSON.stringify(shop));
+    document.getElementById('cartItems').innerHTML = '';
+    document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
+    document.getElementById('cost').innerText = '';
+  });
+}
+
 function renderInDropdown(element, quantity) {
   let list = document.createElement('li');
   list.classList.add('list-group-item', 'd-flex', 'flex-column', 'align-items-center', 'mb-2', 'border', 'border-2', 'border-dark', 'rounded-3');
@@ -41,7 +52,7 @@ function renderInDropdown(element, quantity) {
         <img src="${element.image}" alt="${element.title}" class="img-fluid" style="width: 50px; height: 50px;">
         <div class="input-group input-group-sm" style="width: 140px;">
           <button class="btn btn-outline-secondary" type="button" id="btnPlus">+</button>
-          <input type="text" class="form-control" value="${quantity}" aria-describedby="button-addon1" >
+          <input type="text" class="form-control" value="${quantity}" aria-describedby="button-addon1" id="input">
           <button class="btn btn-outline-secondary" type="button" id="btnMinus">-</button>
         </div>
         <span class="text-secondary font-weight-bold " id="price">$${element.price * quantity}</span>
@@ -50,17 +61,11 @@ function renderInDropdown(element, quantity) {
       `;
   document.getElementById('cartItems').appendChild(list);
 
-  let titleDiv = list.querySelector('.w-100');
-  titleDiv.style.overflow = 'hidden';
-  titleDiv.style.textOverflow = 'ellipsis';
-  titleDiv.style.whiteSpace = 'nowrap';
-
-  let input = list.querySelector('.input-group input');
+  let input = list.querySelector('#input');
   let minusButton = list.querySelector('#btnMinus');
   let plusButton = list.querySelector('#btnPlus');
   let deleteButton = list.querySelector('#btnDelete');
-  let navbarDropdownMenuLink = document.getElementById('navbarDropdownMenuLink');
-  
+
   if(totalCost.some(item => item[0] === element.id)) {
     totalCost.find(item => item[0] === element.id)[1] += element.price;
     document.getElementById('cost').innerText = totalCost.reduce((acc, item) => acc + item[1], 0).toFixed(2);
@@ -73,9 +78,9 @@ function renderInDropdown(element, quantity) {
     if (quantity > 1) {
       quantity--;
       input.value = quantity;
-      list.querySelector('#price').innerHTML = (element.price * quantity).toFixed(2);
+      list.querySelector('#price').innerHTML = '$' + (element.price * quantity).toFixed(2);
       shop.find(item => item[0] === element.id)[1] = quantity;
-      navbarDropdownMenuLink.innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
+      document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
 
       totalCost.find(item => item[0] === element.id)[1] = element.price * quantity;
       document.getElementById('cost').innerText = totalCost.reduce((acc, item) => acc + item[1], 0).toFixed(2);
@@ -83,45 +88,40 @@ function renderInDropdown(element, quantity) {
       localStorage.setItem('shop', JSON.stringify(shop));
     } else {
       shop = shop.filter(item => item[0] !== element.id);
-      navbarDropdownMenuLink.innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
-      localStorage.setItem('shop', JSON.stringify(shop));
-      
-      totalCost.splice(totalCost.findIndex(item => item[0] === element.id), 1);
+      totalCost = totalCost.filter(item => item[0] !== element.id);
+
+      document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
       document.getElementById('cost').innerText = totalCost.reduce((acc, item) => acc + item[1], 0).toFixed(2);
 
+      localStorage.setItem('shop', JSON.stringify(shop));
       list.remove();
     }
   });
 
   input.addEventListener('change', () => {
-    if (input.value > 0) {
-      quantity = input.value;
-      list.querySelector('#price').innerHTML = (element.price * quantity).toFixed(2);
+    const quant = parseInt(input.value);
+    if (isNaN(quant) || quant <= 0) {
+      alert('Please enter a valid quantity.');
+      input.value = quantity;
+    } else {
+      quantity = quant;
+      list.querySelector('#price').innerHTML = '$' + (element.price * quantity).toFixed(2);
       shop.find(item => item[0] === element.id)[1] = quantity;
-      navbarDropdownMenuLink.innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
-      
+      document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
+        
       totalCost.find(item => item[0] === element.id)[1] = element.price * quantity;
       document.getElementById('cost').innerText = totalCost.reduce((acc, item) => acc + item[1], 0).toFixed(2);
-
+  
       localStorage.setItem('shop', JSON.stringify(shop));
-    } else {
-      shop = shop.filter(item => item[0] !== element.id);
-      navbarDropdownMenuLink.innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
-      localStorage.setItem('shop', JSON.stringify(shop));
-      
-      totalCost.splice(totalCost.findIndex(item => item[0] === element.id), 1);
-      document.getElementById('cost').innerText = totalCost.reduce((acc, item) => acc + item[1], 0).toFixed(2);
-
-      list.remove();
     }
   });
 
   plusButton.addEventListener('click', () => {
     quantity++;
     input.value = quantity;
-    list.querySelector('#price').innerHTML = element.price * quantity;
+    list.querySelector('#price').innerHTML = '$' + (element.price * quantity).toFixed(2);
     shop.find(item => item[0] === element.id)[1] = quantity;
-    navbarDropdownMenuLink.innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
+    document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
     
     totalCost.find(item => item[0] === element.id)[1] = element.price * quantity;
     document.getElementById('cost').innerText = totalCost.reduce((acc, item) => acc + item[1], 0).toFixed(2);
@@ -131,12 +131,13 @@ function renderInDropdown(element, quantity) {
 
   deleteButton.addEventListener('click', () => {
     shop = shop.filter(item => item[0] !== element.id);
-    localStorage.setItem('shop', JSON.stringify(shop));
     
-    totalCost.splice(totalCost.findIndex(item => item[0] === element.id), 1);
+    totalCost = totalCost.filter(item => item[0] !== element.id);
     document.getElementById('cost').innerText = totalCost.reduce((acc, item) => acc + item[1], 0).toFixed(2);
 
-    navbarDropdownMenuLink.innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
+    document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
+
+    localStorage.setItem('shop', JSON.stringify(shop));
     list.remove();
   });
 }
@@ -177,7 +178,7 @@ function renderProductCard(element) {
           <hr class="my-0" />
             <div class="card-body">
               <div class="d-flex justify-content-center align-items-center pb-2 mb-1">
-                <button class="btn btn-primary">Buy now</button>
+                <button class="btn btn-primary">Add to order</button>
               </div>
             </div>
           </div>

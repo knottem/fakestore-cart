@@ -154,9 +154,9 @@ document.getElementById("buttonlocation").addEventListener("mouseover", function
 });
 
 function validateForm() {
-    if (!validateName() || !validateEmail() || !validatePhone() || !validateAdress() || !validateZip() || !validateCity() || shop == null) {
+    if (!validateName() || !validateEmail() || !validatePhone() || !validateAdress() || !validateZip() || !validateCity() || shop == null || shop.length == 0) {
         sendButton.disabled = true;
-        if (shop == null) {
+        if (shop == null || shop.length == 0) {
             alert("Your cart is empty");
         }
     } else {
