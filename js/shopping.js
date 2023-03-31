@@ -4,6 +4,7 @@ import { fetchData } from "./fetch.js";
 let shop;
 let totalCost = [];
 
+//check if there is anything in local storage, if so, render it in dropdown
 if(localStorage.getItem('shop') != null) {
   shop = JSON.parse(localStorage.getItem('shop'));
   fetchData(renderInDropdown, shop);
@@ -16,17 +17,17 @@ if(localStorage.getItem('shop') != null) {
 //fetch data from API
 fetchData(renderProductCard);
 
-//render items in dropdown
+//render items in dropdown, or updates quantity if it already exists
 function addToCart(id) {
   if (shop.some(item => item[0] === id)) {
     shop.find(item => item[0] === id)[1] += 1;
-  }
-  else {
+    document.querySelector('#btnPlus_' + id).click();
+  } else {
     shop.push([id, 1])
+    document.getElementById('cartItems').innerHTML = '';
+    fetchData(renderInDropdown, shop);
   }
   localStorage.setItem('shop', JSON.stringify(shop));
-  document.getElementById('cartItems').innerHTML = '';
-  fetchData(renderInDropdown, shop);
   document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
 }
 
@@ -41,9 +42,12 @@ if(document.getElementById('btnDeleteAll') != null) {
   });
 }
 
+//function for rendering an item in the dropdown
 function renderInDropdown(element, quantity) {
   let list = document.createElement('li');
+  let id = element.id;
   list.classList.add('list-group-item', 'd-flex', 'flex-column', 'align-items-center', 'mb-2', 'border', 'border-2', 'border-dark', 'rounded-3');
+  list.id = id;
   list.innerHTML = `
       <div class="w-100 mb-2" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
         <p class="m-0">${element.title}</p>
@@ -51,20 +55,20 @@ function renderInDropdown(element, quantity) {
       <div class="w-100 d-flex justify-content-between align-items-center">
         <img src="${element.image}" alt="${element.title}" class="img-fluid" style="width: 50px; height: 50px;">
         <div class="input-group input-group-sm" style="width: 140px;">
-          <button class="btn btn-outline-secondary" type="button" id="btnPlus">+</button>
-          <input type="text" class="form-control" value="${quantity}" aria-describedby="button-addon1" id="input">
-          <button class="btn btn-outline-secondary" type="button" id="btnMinus">-</button>
+          <button class="btn btn-outline-secondary" type="button" id="btnPlus_${id}">+</button>
+          <input type="text" class="form-control" value="${quantity}" aria-describedby="button-addon1" id="input_${id}">
+          <button class="btn btn-outline-secondary" type="button" id="btnMinus_${id}">-</button>
         </div>
         <span class="text-secondary font-weight-bold " id="price">$${element.price * quantity}</span>
-        <button class="btn btn-outline-danger btn-sm" id="btnDelete">Delete</button>
+        <button class="btn btn-outline-danger btn-sm" id="btnDelete_${id}">Delete</button>
       </div>
       `;
   document.getElementById('cartItems').appendChild(list);
 
-  let input = list.querySelector('#input');
-  let minusButton = list.querySelector('#btnMinus');
-  let plusButton = list.querySelector('#btnPlus');
-  let deleteButton = list.querySelector('#btnDelete');
+  let input = list.querySelector('#input_' + id);
+  let minusButton = list.querySelector('#btnMinus_' + id);
+  let plusButton = list.querySelector('#btnPlus_' + id);
+  let deleteButton = list.querySelector('#btnDelete_' + id);
 
   if(totalCost.some(item => item[0] === element.id)) {
     totalCost.find(item => item[0] === element.id)[1] += element.price;
@@ -74,6 +78,7 @@ function renderInDropdown(element, quantity) {
     document.getElementById('cost').innerText = totalCost.reduce((acc, item) => acc + item[1], 0).toFixed(2);
   }
 
+  //removes 1 quantity of item from cart and dropdown, or deletes item if quantity is 1
   minusButton.addEventListener('click', () => {
     if (quantity > 1) {
       quantity--;
@@ -98,6 +103,7 @@ function renderInDropdown(element, quantity) {
     }
   });
 
+  //changes quantity to input value if it's valid or alerts user if it's not
   input.addEventListener('change', () => {
     const quant = parseInt(input.value);
     if (isNaN(quant) || quant <= 0) {
@@ -116,6 +122,7 @@ function renderInDropdown(element, quantity) {
     }
   });
 
+  //adds 1 quantity of item to cart and dropdown
   plusButton.addEventListener('click', () => {
     quantity++;
     input.value = quantity;
@@ -129,6 +136,7 @@ function renderInDropdown(element, quantity) {
     localStorage.setItem('shop', JSON.stringify(shop));
   });
 
+  //deletes item from cart and dropdown
   deleteButton.addEventListener('click', () => {
     shop = shop.filter(item => item[0] !== element.id);
     
