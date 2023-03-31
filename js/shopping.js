@@ -14,8 +14,19 @@ if(localStorage.getItem('shop') != null) {
   document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
 }
 
-//fetch data from API
+//fetch data from API and render it on the page
 fetchData(renderProductCard);
+
+//renders only the category that is clicked
+document.getElementById('jewelery').addEventListener('click', () => getCategoryItems('jewelery'));
+document.getElementById('mensclothing').addEventListener('click', () => getCategoryItems('men\'s clothing'));
+document.getElementById('electronics').addEventListener('click', () => getCategoryItems('electronics'));
+document.getElementById('womensclothing').addEventListener('click', () => getCategoryItems('women\'s clothing'));
+
+function getCategoryItems(category){
+  document.getElementById('products').innerHTML = '';
+  fetchData(renderProductCard, null, 'category/' + category);
+}
 
 //render items in dropdown, or updates quantity if it already exists
 function addToCart(id) {
@@ -38,7 +49,13 @@ if(document.getElementById('btnDeleteAll') != null) {
     localStorage.setItem('shop', JSON.stringify(shop));
     document.getElementById('cartItems').innerHTML = '';
     document.getElementById('navbarDropdownMenuLink').innerText = `Cart (${shop.reduce((acc, item) => acc + item[1], 0)})`;
-    document.getElementById('cost').innerText = '';
+    document.getElementById('cost').innerText = '0.00';
+  });
+}
+
+if(document.getElementById('btnCheckout') != null) {
+  document.getElementById('btnCheckout').addEventListener('click', () => {
+    location.href = 'checkout.html';
   });
 }
 

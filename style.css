@@ -90,6 +90,10 @@ footer {
     min-width: 400px;
 }
 
+.mouse {
+    cursor: pointer;
+}
+
 @media (max-width: 576px) {
     #dropdown {
       min-width: auto !important;
