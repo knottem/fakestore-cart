@@ -70,12 +70,12 @@ function renderInDropdown(element, quantity) {
         <p class="m-0">${element.title}</p>
       </div>
       <div class="w-100 d-flex justify-content-between align-items-center">
-        <img src="${element.image}" alt="${element.title}" class="img-fluid" style="width: 50px; height: 50px;">
-        <div class="input-group input-group-sm" style="width: 140px;">
-          <button class="btn btn-outline-secondary" type="button" id="btnPlus_${id}">+</button>
-          <input type="text" class="form-control" value="${quantity}" aria-describedby="button-addon1" id="input_${id}">
-          <button class="btn btn-outline-secondary" type="button" id="btnMinus_${id}">-</button>
-        </div>
+      <img src="${element.image}" alt="${element.title}" class="img-fluid product-image">
+      <div class="input-group input-group-sm product-quantity">
+        <button class="btn btn-outline-secondary" type="button" id="btnPlus_${id}">+</button>
+        <input type="text" class="form-control" value="${quantity}" aria-describedby="button-addon1" id="input_${id}">
+        <button class="btn btn-outline-secondary" type="button" id="btnMinus_${id}">-</button>
+      </div>
         <span class="text-secondary font-weight-bold " id="price">$${element.price * quantity}</span>
         <button class="btn btn-outline-danger btn-sm" id="btnDelete_${id}">Delete</button>
       </div>
