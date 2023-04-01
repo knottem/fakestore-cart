@@ -6,10 +6,11 @@ import { fetchData } from "./fetch.js";
 
 let totalPrice = 0;
 
-if (shop != null) {
-    fetchData(renderCheckoutCard, shop);
+if (shop == null || shop.length == 0) {
+    priceLocation.innerText = `Your cart is empty, Please go back to the shop and add some items to your cart.`;
+    document.getElementById('form').style.display = 'none';
 } else {
-    priceLocation.innerText = `Your cart is empty`;
+    fetchData(renderCheckoutCard, shop);
 }
 
 const total = {

@@ -22,6 +22,10 @@ document.getElementById('jewelery').addEventListener('click', () => getCategoryI
 document.getElementById('mensclothing').addEventListener('click', () => getCategoryItems('men\'s clothing'));
 document.getElementById('electronics').addEventListener('click', () => getCategoryItems('electronics'));
 document.getElementById('womensclothing').addEventListener('click', () => getCategoryItems('women\'s clothing'));
+document.getElementById('all').addEventListener('click', () => {
+  document.getElementById('products').innerHTML = '';
+  fetchData(renderProductCard);
+});
 
 function getCategoryItems(category){
   document.getElementById('products').innerHTML = '';
@@ -76,7 +80,7 @@ function renderInDropdown(element, quantity) {
         <input type="text" class="form-control" value="${quantity}" aria-describedby="button-addon1" id="input_${id}">
         <button class="btn btn-outline-secondary" type="button" id="btnMinus_${id}">-</button>
       </div>
-        <span class="text-secondary font-weight-bold " id="price">$${element.price * quantity}</span>
+        <span class="text-secondary font-weight-bold" id="price">$${element.price * quantity}</span>
         <button class="btn btn-outline-danger btn-sm" id="btnDelete_${id}">Delete</button>
       </div>
       `;

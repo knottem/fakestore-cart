@@ -4,6 +4,7 @@ import { fetchData } from "./fetch.js";
 const customer = JSON.parse(sessionStorage.getItem('customer'));
 const shop = JSON.parse(localStorage.getItem('shop'))
 
+let totalCost = 0;
 
 if (shop == null || customer == null) {
     if (shop == null) {
@@ -16,6 +17,7 @@ if (shop == null || customer == null) {
 
     fetchData(renderConfirmationCard, shop);
     renderCustomer(customer);
+    localStorage.removeItem('shop');
 
     function renderConfirmationCard(element, quantity) {
         const confirmationCard = document.createElement('div');
@@ -46,6 +48,9 @@ if (shop == null || customer == null) {
     </div>
 `;
         document.getElementById('item').appendChild(confirmationCard);
+
+        totalCost += element.price * quantity;
+        document.getElementById('total').innerText = `Total cost: $${totalCost}`;
     }
 
 
