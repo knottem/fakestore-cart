@@ -26,6 +26,6 @@ git clone https://github.com/knottem/fakestore-cart.git
 
 This project was created by [Knottem](https://github.com/knottem). 
 
-The base project was built by [Knottem](https://github.com/knottem) and [Peter](https://github.com/petertalling).
+The base project was built by [Knottem](https://github.com/knottem) and [Peter](https://github.com/petertalling). That project can be found [here](https://github.com/knottem/Fakestore-project)
 
 The application uses the [FakeStore API](https://fakestoreapi.com/) to fetch product data.
