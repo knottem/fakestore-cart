@@ -137,12 +137,12 @@ function validateCity() {
     }
 }
 
-names.addEventListener("blur", validateName);
-email.addEventListener("blur", validateEmail);
-phone.addEventListener("blur", validatePhone);
-address.addEventListener("blur", validateAdress);
-zip.addEventListener("blur", validateZip);
-city.addEventListener("blur", validateCity);
+names.addEventListener("input", validateName);
+email.addEventListener("input", validateEmail);
+phone.addEventListener("input", validatePhone);
+address.addEventListener("input", validateAdress);
+zip.addEventListener("input", validateZip);
+city.addEventListener("input", validateCity);
 
 sendButton.addEventListener("click", validateForm);
 
