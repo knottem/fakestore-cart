@@ -203,6 +203,5 @@ function renderCheckoutCard(element, quantity) {
     document.querySelector('.checkout').appendChild(checkoutCard);
 
     totalPrice += element.price * quantity;
-    console.log(totalPrice);
     priceLocation.innerText = `Total Sum: $${totalPrice.toFixed(2)}`;
 }
