@@ -73,5 +73,6 @@ if (shop == null || customer == null) {
     `;
 
         document.getElementById('customer').appendChild(card);
+        sessionStorage.removeItem('customer');
     }
 }
