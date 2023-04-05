@@ -13,4 +13,4 @@ jobs:
         run: |
           curl -X POST https://server.knotten.net/webhook/ \
           -H 'Content-Type: application/json' \
-          -d '{"repository": {"url": "https://github.com/knottem/fakestore-cart"}}'
+          -d '{"repository": {"name": "fakestore-cart"}}'
